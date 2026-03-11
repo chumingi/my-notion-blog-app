@@ -5,7 +5,7 @@
 - **Name**: my-notion-blog-app
 - **Goal**: Personal learning log and tech blog powered by Notion as CMS
 - **Structure**: Notion → (manual import) → JSON cache → SSG public pages
-- **Status**: Week 1 in progress — Notion OAuth done, Import layer next
+- **Status**: Week 1 in progress — Import pipeline done, Blog pages next
 
 ---
 
@@ -34,7 +34,7 @@ Every Claude session must follow this workflow:
 
 - **Phase**: Week 1 — Foundation + Notion integration
 - **Last completed feature**: `sync-import` (Notion import pipeline + JSON cache + admin page)
-- **Current branch**: `feature/sync-import` (ready to merge)
+- **Current branch**: `main` (ready for next feature)
 - **Next branch**: `feature/blog-pages`
 
 **What's implemented:**
@@ -71,26 +71,28 @@ Every Claude session must follow this workflow:
 
 ## Next Recommended Feature
 
-**Feature**: `sync-import`
-**Goal**: Implement the full Notion → cache → admin-page import pipeline
+**Feature**: `blog-pages`
+**Goal**: Implement public-facing post and note list + detail pages from JSON cache
 
 **Scope:**
-- `types/post.ts`, `types/note.ts` — shared type definitions
-- `lib/utils/slug.ts` — slug resolution utility
-- `lib/notion/posts.ts` — fetch all posts from Notion Posts DB
-- `lib/notion/notes.ts` — fetch all notes from Notion Notes DB
-- `lib/cache/writer.ts` — atomic JSON file write
-- `lib/cache/reader.ts` — typed JSON file read
-- `app/api/import/route.ts` — POST /api/import (admin protected)
-- `app/admin/import/page.tsx` — import status + trigger page
+- `app/posts/page.tsx` — post list page (`/posts`), reads `cache/posts.json`, filters `status === 'published'`
+- `app/posts/[slug]/page.tsx` — post detail page (`/posts/[slug]`), `generateStaticParams` from cache
+- `app/notes/page.tsx` — note list page (`/notes`), reads `cache/notes.json`, filters `status === 'published'`
+- `app/notes/[slug]/page.tsx` — note detail page (`/notes/[slug]`)
+- Block content: call `lib/notion/blocks.ts` (to be created) at build time via `blocks.children.list`
 
 **Done criteria:**
-- `POST /api/import?secret=...` fetches from Notion, writes `cache/posts.json` + `cache/notes.json`
-- `/admin/import?secret=...` shows last import time, post/note counts, trigger button
+- `/posts` lists all published posts from cache
+- `/posts/[slug]` renders post metadata (title, date, tags) — block content can be placeholder for now
+- `/notes` and `/notes/[slug]` same pattern
 - Build passes with no type errors
 
-**Recommended branch**: `feature/sync-import`
-**Commit example**: `feat(import): add notion data import pipeline with json cache`
+**Recommended branch**: `feature/blog-pages`
+**Commit example**: `feat(pages): add post and note list and detail pages`
+
+**Notes:**
+- `@notionhq/client` v5 사용 중. blocks API는 `notion.blocks.children.list` 유지 확인 필요
+- Block renderer (`feature/block-renderer`)는 별도 feature로 분리 예정 — 이번엔 메타데이터 렌더링만
 
 ---
 
@@ -110,6 +112,7 @@ See full development history: `docs/changelog.md`
 **Warnings:**
 - `NOTION_ACCESS_TOKEN` must be set in `.env.local` before import can run
 - Notion DB IDs (`NOTION_POSTS_DB_ID`, `NOTION_NOTES_DB_ID`) must also be set
-- `cache/` directory is in `.gitignore` — will not exist on fresh clone
+- `cache/` directory is in `.gitignore` — will not exist on fresh clone; run import first
+- `@notionhq/client` v5: `databases.query` 없음 → `dataSources.query(data_source_id)` 사용
 
 **Next target**: `feature/blog-pages`
