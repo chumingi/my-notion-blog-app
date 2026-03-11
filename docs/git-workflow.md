@@ -100,24 +100,39 @@ chore(deps): add @notionhq/client and shiki
 # 1. main 기준으로 feature 브랜치 생성
 git checkout main
 git pull origin main
-git checkout -b feature/notion-oauth
+git checkout -b feature/sync-import
 
 # 2. 작업 수행
 
-# 3. 변경 파일 스테이징
-git add app/notion/connect/page.tsx
-git add lib/notion/oauth.ts
+# 3. 변경 파일 스테이징 (구체적으로 지정)
+git add lib/notion/posts.ts lib/cache/writer.ts app/api/import/route.ts
 
-# 4. 커밋 생성
-git commit -m "feat(auth): add notion oauth connect flow"
+# 4. docs 업데이트 포함 커밋
+git commit -m "feat(import): add notion data import pipeline with json cache"
 
-# 5. main에 머지 (개인 프로젝트, PR 생략 가능)
+# 5. remote에 push (필수 — 이력 보존)
+git push origin feature/sync-import
+
+# 6. main에 머지
 git checkout main
-git merge feature/notion-oauth
+git merge feature/sync-import
 
-# 6. 브랜치 정리
-git branch -d feature/notion-oauth
+# 7. 로컬 브랜치만 정리 (remote는 삭제하지 않음)
+git branch -d feature/sync-import
+# ❌ git push origin --delete feature/sync-import  ← 하지 않는다
 ```
+
+---
+
+## 세션 시작 규칙
+
+새 Claude 세션을 시작할 때 반드시 다음 순서로 읽는다:
+
+1. `CLAUDE.md` — 프로젝트 작업 규칙
+2. `docs/dev-progress.md` — 현재 구현 상태, 다음 feature
+3. `docs/architecture.md` — 전체 구조 참조
+
+이 세 파일을 읽기 전에 코드를 작성하지 않는다.
 
 ---
 
@@ -128,7 +143,11 @@ git branch -d feature/notion-oauth
 1. **변경 파일 목록 정리**
 2. **기능 설명** (무엇을 했는지)
 3. **테스트 방법 설명** (어떻게 확인하는지)
-4. **Git commit 생성** (Conventional Commits, 영어)
+4. **`docs/dev-progress.md` 업데이트** — Current Status + Feature Index
+5. **`docs/changelog.md` 업데이트** — 새 feature entry 추가
+6. **Git commit 생성** (Conventional Commits, 영어)
+7. **git push** — feature branch를 remote에 push
+8. **main merge** — local feature branch는 삭제, remote는 유지
 
 ---
 
@@ -152,6 +171,22 @@ node_modules/
 # OS
 .DS_Store
 Thumbs.db
+```
+
+---
+
+## Remote Branch 정책
+
+- feature 브랜치는 merge 후 **remote를 삭제하지 않는다.**
+- 이유: 이력 보존, 이전 구현 참조 가능
+- 로컬 브랜치만 `git branch -d`로 정리한다.
+
+```bash
+# 올바른 정리
+git branch -d feature/sync-import       # 로컬만 삭제
+
+# 하지 않는 것
+git push origin --delete feature/sync-import  # ❌
 ```
 
 ---

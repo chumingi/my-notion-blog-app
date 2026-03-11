@@ -48,6 +48,7 @@
    └─ feature/*
    └─ fix/*
    └─ refactor/*
+   └─ docs/*
   ```
 - **커밋 언어**: 모든 커밋 메시지는 영어로 작성한다.
 - **커밋 형식**: Conventional Commits 준수.
@@ -55,7 +56,17 @@
   type(scope): message
   ```
   허용 type: `feat`, `fix`, `refactor`, `docs`, `chore`, `style`, `test`
-- **작업 완료 시**: 반드시 commit을 생성한다.
+- **작업 완료 시 순서**:
+  1. `docs/dev-progress.md` Current Status + Feature Index 업데이트
+  2. `docs/changelog.md`에 feature entry 추가
+  3. git commit (Conventional Commits, 영어)
+  4. **git push** (feature branch를 remote에 push)
+  5. main에 merge
+  6. **remote branch 삭제 금지** (이력 보존)
+- **세션 시작 시 반드시 읽을 파일**:
+  1. `CLAUDE.md`
+  2. `docs/dev-progress.md`
+  3. `docs/architecture.md`
 
 ---
 
@@ -103,30 +114,42 @@ $ 명령어
 
 ## 기술 스택 (변경 시 이 파일도 업데이트)
 
-- Framework: Next.js 14 (App Router)
-- Language: TypeScript
-- Styling: Tailwind CSS
+- Framework: Next.js 16 (App Router)
+- Language: TypeScript 5 (strict)
+- Styling: Tailwind CSS v4
 - Notion SDK: `@notionhq/client`
 - Package Manager: pnpm
 - Deploy: Vercel
 
 ---
 
-## 디렉토리 구조 (예정)
+## 디렉토리 구조 (현재 기준, 변경 시 업데이트)
 
 ```
 my-notion-blog-app/
-├── app/                  # Next.js App Router 페이지
-│   ├── (public)/         # 공개 페이지 그룹
-│   │   ├── posts/
-│   │   └── notes/
-│   └── admin/            # 관리자 페이지
-├── components/           # 재사용 컴포넌트
-├── lib/                  # 유틸리티, API 클라이언트
-│   └── notion.ts         # Notion API 래퍼
-├── types/                # 공유 타입 정의
-├── docs/                 # 프로젝트 문서
-│   ├── requirements.md
-│   └── roadmap.md
+├── app/
+│   ├── api/notion/start/     # GET  /api/notion/start   (OAuth 시작)
+│   ├── api/notion/callback/  # GET  /api/notion/callback (OAuth 콜백)
+│   ├── api/import/           # POST /api/import          (데이터 import)
+│   ├── notion/connect/       # /notion/connect           (OAuth 연결 페이지)
+│   ├── admin/import/         # /admin/import             (import 관리 페이지)
+│   ├── posts/[slug]/         # /posts/[slug]             (포스트 상세)
+│   ├── notes/[slug]/         # /notes/[slug]             (노트 상세)
+│   └── ...
+├── components/               # 재사용 컴포넌트
+├── lib/
+│   ├── notion/               # Notion API 연동
+│   │   ├── client.ts         # SDK 인스턴스
+│   │   ├── oauth.ts          # OAuth 유틸
+│   │   ├── posts.ts          # Posts DB fetch (예정)
+│   │   └── notes.ts          # Notes DB fetch (예정)
+│   ├── cache/                # JSON 캐시 읽기/쓰기 (예정)
+│   └── utils/slug.ts         # slug 처리 (예정)
+├── types/                    # 공유 타입 (예정)
+├── cache/                    # 런타임 JSON 캐시 (gitignore)
+├── docs/
+│   ├── dev-progress.md       # 현재 개발 상태 (세션 시작 시 필독)
+│   ├── changelog.md          # 전체 개발 이력
+│   └── ...
 └── CLAUDE.md
 ```
