@@ -16,7 +16,7 @@ build/
 .env.production.local
 
 # Runtime cache (re-generated on import)
-cache/
+/cache/
 
 # Debug
 npm-debug.log*

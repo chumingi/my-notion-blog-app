@@ -33,14 +33,15 @@ Every Claude session must follow this workflow:
 ## Current Status
 
 - **Phase**: Week 1 — Foundation + Notion integration
-- **Last completed feature**: `notion-oauth` (Notion OAuth connect flow)
-- **Current branch**: `main` (ready for next feature)
-- **Next branch**: `feature/sync-import`
+- **Last completed feature**: `sync-import` (Notion import pipeline + JSON cache + admin page)
+- **Current branch**: `feature/sync-import` (ready to merge)
+- **Next branch**: `feature/blog-pages`
 
 **What's implemented:**
 - Full project documentation (requirements, architecture, roadmap, decisions, git-workflow, screens, setup)
 - Next.js 16 + TypeScript + Tailwind + App Router base project
 - Notion OAuth: connect page, start redirect, callback handler, token exchange
+- Sync import: types, slug utility, Notion fetch (posts + notes), JSON cache writer/reader, POST /api/import, /admin/import page
 
 **Open decisions:**
 - `NOTION_ACCESS_TOKEN` is stored manually in `.env.local` after OAuth (by design — personal app, token doesn't expire)
@@ -55,7 +56,7 @@ Every Claude session must follow this workflow:
 | Project documentation | `docs/add-progress-tracking`* | merged |
 | Next.js project init | `feature/project-init` | merged |
 | Notion OAuth connect | `feature/notion-oauth` | merged |
-| Sync import (cache + API + admin page) | `feature/sync-import` | planned |
+| Sync import (cache + API + admin page) | `feature/sync-import` | merged |
 | Post list + detail pages | `feature/blog-pages` | planned |
 | Note list + detail pages | `feature/note-pages` | planned |
 | Notion block renderer | `feature/block-renderer` | planned |
@@ -111,4 +112,4 @@ See full development history: `docs/changelog.md`
 - Notion DB IDs (`NOTION_POSTS_DB_ID`, `NOTION_NOTES_DB_ID`) must also be set
 - `cache/` directory is in `.gitignore` — will not exist on fresh clone
 
-**Next target**: `feature/sync-import`
+**Next target**: `feature/blog-pages`

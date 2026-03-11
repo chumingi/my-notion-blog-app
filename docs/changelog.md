@@ -4,6 +4,38 @@ Full development history. Newest entries at the top.
 
 ---
 
+## Feature — sync-import
+
+**Branch**: `feature/sync-import`
+
+**Commits**:
+- `feat(import): add notion data import pipeline with json cache`
+
+**Summary**:
+
+Implemented the full Notion → cache → admin-page import pipeline.
+
+- `types/post.ts`: `Post` interface and `PostStatus` type (`draft | published | archived`)
+- `types/note.ts`: `Note` interface and `NoteStatus` type (`draft | published`)
+- `lib/utils/slug.ts`: `resolveSlug(slugProp, pageId, seen)` — Slug 속성 우선, fallback notionPageId, sanitize, 중복 시 `-2` suffix
+- `lib/notion/posts.ts`: `importAllPosts()` — `dataSources.query()` + pagination, property parsing, typed output
+- `lib/notion/notes.ts`: `importAllNotes()` — same pattern for Notes DB
+- `lib/cache/writer.ts`: `writeCacheFile<T>()` — atomic write (tmp → rename), Vercel `/tmp/cache` 지원
+- `lib/cache/reader.ts`: `readCacheFile<T>()` — typed JSON read, returns null if absent
+- `app/api/import/route.ts` — `POST /api/import?secret=...`
+  - `ADMIN_SECRET` 검증 (없으면 401)
+  - posts + notes 병렬 fetch, 캐시 파일 쓰기
+  - `{ success, postsCount, notesCount, importedAt }` 반환
+- `app/admin/import/page.tsx` — `/admin/import?secret=...`
+  - 서버 컴포넌트, `ADMIN_SECRET` 검증 (실패 시 404)
+  - 마지막 import 시각, posts/notes 개수 표시
+- `components/admin/ImportButton.tsx` — 클라이언트 컴포넌트
+  - Import 버튼, loading/success/error 상태 표시
+
+**Design note**: `@notionhq/client` v5.x에서 `databases.query` → `dataSources.query`로 API 변경됨. `data_source_id` 파라미터 사용.
+
+---
+
 ## Feature — notion-oauth
 
 **Branch**: `feature/notion-oauth`
