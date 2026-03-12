@@ -1,7 +1,9 @@
 import type { BlockObjectResponse, PartialBlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import { createNotionClient } from './client'
 
-export type NotionBlock = BlockObjectResponse
+export type NotionBlock = BlockObjectResponse & {
+  children?: NotionBlock[]
+}
 
 export async function fetchBlocks(pageId: string): Promise<NotionBlock[]> {
   const notion = createNotionClient()
@@ -16,7 +18,11 @@ export async function fetchBlocks(pageId: string): Promise<NotionBlock[]> {
 
     for (const block of response.results) {
       if (isFullBlock(block)) {
-        blocks.push(block)
+        const notionBlock: NotionBlock = { ...block }
+        if (block.has_children) {
+          notionBlock.children = await fetchBlocks(block.id)
+        }
+        blocks.push(notionBlock)
       }
     }
 

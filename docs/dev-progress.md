@@ -33,9 +33,9 @@ Every Claude session must follow this workflow:
 ## Current Status
 
 - **Phase**: Week 1 — Foundation + Notion integration
-- **Last completed feature**: `blog-pages` (post + note list and detail pages from JSON cache)
+- **Last completed feature**: `block-renderer` (Notion block + rich text renderer for post/note detail pages)
 - **Current branch**: `main` (ready for next feature)
-- **Next branch**: `feature/block-renderer`
+- **Next branch**: `feature/layout`
 
 **What's implemented:**
 - Full project documentation (requirements, architecture, roadmap, decisions, git-workflow, screens, setup)
@@ -43,6 +43,7 @@ Every Claude session must follow this workflow:
 - Notion OAuth: connect page, start redirect, callback handler, token exchange
 - Sync import: types, slug utility, Notion fetch (posts + notes), JSON cache writer/reader, POST /api/import, /admin/import page
 - Blog pages: /posts list+detail, /notes list+detail, lib/notion/blocks.ts (block fetch), generateStaticParams from cache
+- Block renderer: RichText.tsx (inline styles), NotionBlock.tsx (paragraph/heading/list/code/image/quote/callout/divider/toggle), shiki syntax highlighting (token-based)
 
 **Open decisions:**
 - `NOTION_ACCESS_TOKEN` is stored manually in `.env.local` after OAuth (by design — personal app, token doesn't expire)
@@ -60,7 +61,7 @@ Every Claude session must follow this workflow:
 | Sync import (cache + API + admin page) | `feature/sync-import` | merged |
 | Post list + detail pages | `feature/blog-pages` | merged |
 | Note list + detail pages | `feature/blog-pages` | merged |
-| Notion block renderer | `feature/block-renderer` | planned |
+| Notion block renderer | `feature/block-renderer` | merged |
 | Layout (Header, Footer, dark mode) | `feature/layout` | planned |
 | Tag filter UI | `feature/tag-filter` | planned |
 | SEO (meta, OG image) | `feature/seo` | planned |
@@ -72,23 +73,22 @@ Every Claude session must follow this workflow:
 
 ## Next Recommended Feature
 
-**Feature**: `block-renderer`
-**Goal**: Implement Notion block renderer to display actual page content
+**Feature**: `layout`
+**Goal**: Implement Header, Footer, and global layout (including dark mode toggle)
 
 **Scope:**
-- `components/blocks/NotionBlock.tsx` — recursive block renderer (paragraph, heading_1/2/3, bulleted/numbered list, code, image, quote, callout, divider, toggle)
-- `components/blocks/RichText.tsx` — inline text style renderer (bold, italic, code, link, strikethrough)
-- Replace placeholder in `/posts/[slug]` and `/notes/[slug]` with `<NotionBlock>` components
-- Code blocks: shiki syntax highlighting
+- `components/layout/Header.tsx` — site header with navigation links (/, /posts, /notes)
+- `components/layout/Footer.tsx` — minimal footer
+- `app/layout.tsx` — wire Header + Footer into root layout
+- Dark mode: Tailwind CSS v4 dark variant via `prefers-color-scheme` or toggle
 
 **Done criteria:**
-- Common Notion block types render correctly
-- Unsupported types silently return null (console.warn in dev)
-- No `dangerouslySetInnerHTML`
+- Header renders nav links correctly
+- Footer renders
 - Build passes with no type errors
 
-**Recommended branch**: `feature/block-renderer`
-**Commit example**: `feat(renderer): add notion block and rich text renderer components`
+**Recommended branch**: `feature/layout`
+**Commit example**: `feat(layout): add header, footer, and root layout`
 
 ---
 
@@ -111,4 +111,4 @@ See full development history: `docs/changelog.md`
 - `cache/` directory is in `.gitignore` — will not exist on fresh clone; run import first
 - `@notionhq/client` v5: `databases.query` 없음 → `dataSources.query(data_source_id)` 사용
 
-**Next target**: `feature/blog-pages`
+**Next target**: `feature/layout`

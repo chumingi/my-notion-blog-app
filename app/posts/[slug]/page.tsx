@@ -1,5 +1,6 @@
 import { readCacheFile } from '@/lib/cache/reader'
 import { fetchBlocks } from '@/lib/notion/blocks'
+import { NotionBlocks } from '@/components/blocks/NotionBlock'
 import type { Post } from '@/types/post'
 import { notFound } from 'next/navigation'
 
@@ -51,9 +52,8 @@ export default async function PostPage({ params }: Props) {
           )}
         </header>
 
-        {/* Block renderer placeholder — feature/block-renderer에서 구현 예정 */}
-        <div className="text-gray-400 text-sm border border-dashed border-gray-200 rounded p-4">
-          {blocks.length} block(s) loaded from Notion. Block renderer coming soon.
+        <div className="prose prose-gray max-w-none">
+          <NotionBlocks blocks={blocks} />
         </div>
       </article>
     </main>

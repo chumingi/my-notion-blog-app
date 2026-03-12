@@ -4,6 +4,27 @@ Full development history. Newest entries at the top.
 
 ---
 
+## Feature — block-renderer
+
+**Branch**: `feature/block-renderer`
+
+**Commits**:
+- `feat(renderer): add notion block and rich text renderer components`
+
+**Summary**:
+
+Implemented Notion block renderer to display actual page content in post/note detail pages.
+
+- `lib/notion/blocks.ts`: extended `NotionBlock` type with `children?: NotionBlock[]`; `fetchBlocks` now recursively fetches children when `has_children` is true
+- `components/blocks/RichText.tsx`: inline text style renderer — bold, italic, strikethrough, underline, inline code, links
+- `components/blocks/NotionBlock.tsx`: recursive block renderer (`NotionBlocks` array renderer + `NotionBlock` per-block); handles paragraph, heading_1/2/3, bulleted/numbered list (with grouping), code (shiki token-based, no dangerouslySetInnerHTML), image (next/image), quote, callout, divider, toggle; unsupported types return null with console.warn in dev
+- `app/posts/[slug]/page.tsx`: replaced placeholder with `<NotionBlocks>`
+- `app/notes/[slug]/page.tsx`: replaced placeholder with `<NotionBlocks>`
+
+**Dependencies added**: `shiki@4.0.2`
+
+---
+
 ## Feature — blog-pages
 
 **Branch**: `feature/blog-pages`
