@@ -4,6 +4,25 @@ Full development history. Newest entries at the top.
 
 ---
 
+## Feature — blog-pages
+
+**Branch**: `feature/blog-pages`
+
+**Commits**:
+- `feat(pages): add post and note list and detail pages`
+
+**Summary**:
+
+Implemented public-facing list and detail pages for posts and notes, reading from JSON cache.
+
+- `lib/notion/blocks.ts`: `fetchBlocks(pageId)` — `blocks.children.list` + pagination, returns `BlockObjectResponse[]`
+- `app/posts/page.tsx`: `/posts` — reads `cache/posts.json`, filters `status === 'published'`, lists title/summary/date/tags
+- `app/posts/[slug]/page.tsx`: `/posts/[slug]` — `generateStaticParams` from cache, renders post metadata; block content placeholder (feature/block-renderer 예정)
+- `app/notes/page.tsx`: `/notes` — reads `cache/notes.json`, filters `status === 'published'`, lists title/date/tags
+- `app/notes/[slug]/page.tsx`: `/notes/[slug]` — same pattern for notes
+
+---
+
 ## Feature — sync-import
 
 **Branch**: `feature/sync-import`
