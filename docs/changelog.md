@@ -4,6 +4,23 @@ Full development history. Newest entries at the top.
 
 ---
 
+## Feature — layout
+
+**Branch**: `feature/layout`
+
+**Commits**:
+- `feat(layout): add header, footer, and root layout`
+
+**Summary**:
+
+Implemented global layout with Header, Footer, and updated root layout.
+
+- `components/layout/Header.tsx`: sticky site header with nav links (/, /posts, /notes); dark mode via `prefers-color-scheme`
+- `components/layout/Footer.tsx`: minimal footer with copyright
+- `app/layout.tsx`: wired Header + Footer; updated metadata title/description; constrained main content to `max-w-3xl`
+
+---
+
 ## Feature — block-renderer
 
 **Branch**: `feature/block-renderer`

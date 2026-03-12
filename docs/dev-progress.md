@@ -33,9 +33,9 @@ Every Claude session must follow this workflow:
 ## Current Status
 
 - **Phase**: Week 1 — Foundation + Notion integration
-- **Last completed feature**: `block-renderer` (Notion block + rich text renderer for post/note detail pages)
-- **Current branch**: `main` (ready for next feature)
-- **Next branch**: `feature/layout`
+- **Last completed feature**: `layout` (Header, Footer, root layout with dark mode)
+- **Current branch**: `feature/layout`
+- **Next branch**: `feature/tag-filter`
 
 **What's implemented:**
 - Full project documentation (requirements, architecture, roadmap, decisions, git-workflow, screens, setup)
@@ -44,6 +44,7 @@ Every Claude session must follow this workflow:
 - Sync import: types, slug utility, Notion fetch (posts + notes), JSON cache writer/reader, POST /api/import, /admin/import page
 - Blog pages: /posts list+detail, /notes list+detail, lib/notion/blocks.ts (block fetch), generateStaticParams from cache
 - Block renderer: RichText.tsx (inline styles), NotionBlock.tsx (paragraph/heading/list/code/image/quote/callout/divider/toggle), shiki syntax highlighting (token-based)
+- Layout: Header (sticky, nav links), Footer, root layout wired (max-w-3xl, dark mode via prefers-color-scheme)
 
 **Open decisions:**
 - `NOTION_ACCESS_TOKEN` is stored manually in `.env.local` after OAuth (by design — personal app, token doesn't expire)
@@ -62,7 +63,7 @@ Every Claude session must follow this workflow:
 | Post list + detail pages | `feature/blog-pages` | merged |
 | Note list + detail pages | `feature/blog-pages` | merged |
 | Notion block renderer | `feature/block-renderer` | merged |
-| Layout (Header, Footer, dark mode) | `feature/layout` | planned |
+| Layout (Header, Footer, dark mode) | `feature/layout` | merged |
 | Tag filter UI | `feature/tag-filter` | planned |
 | SEO (meta, OG image) | `feature/seo` | planned |
 | Vercel deploy | `feature/deploy` | planned |
@@ -73,22 +74,20 @@ Every Claude session must follow this workflow:
 
 ## Next Recommended Feature
 
-**Feature**: `layout`
-**Goal**: Implement Header, Footer, and global layout (including dark mode toggle)
+**Feature**: `tag-filter`
+**Goal**: Implement tag filter UI on post/note list pages
 
 **Scope:**
-- `components/layout/Header.tsx` — site header with navigation links (/, /posts, /notes)
-- `components/layout/Footer.tsx` — minimal footer
-- `app/layout.tsx` — wire Header + Footer into root layout
-- Dark mode: Tailwind CSS v4 dark variant via `prefers-color-scheme` or toggle
+- `components/ui/TagFilter.tsx` — tag filter button group (client component)
+- `app/posts/page.tsx`, `app/notes/page.tsx` — integrate TagFilter
 
 **Done criteria:**
-- Header renders nav links correctly
-- Footer renders
+- Tags extracted from cached posts/notes
+- Clicking a tag filters the displayed list
 - Build passes with no type errors
 
-**Recommended branch**: `feature/layout`
-**Commit example**: `feat(layout): add header, footer, and root layout`
+**Recommended branch**: `feature/tag-filter`
+**Commit example**: `feat(tag-filter): add tag filter UI to post and note list pages`
 
 ---
 
