@@ -15,8 +15,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MinGi's Blog",
+  title: {
+    default: "MinGi's Blog",
+    template: "%s | MinGi's Blog",
+  },
   description: "Personal learning log and tech blog powered by Notion",
+  openGraph: {
+    title: "MinGi's Blog",
+    description: "Personal learning log and tech blog powered by Notion",
+    type: "website",
+    locale: "ko_KR",
+  },
 };
 
 export default function RootLayout({

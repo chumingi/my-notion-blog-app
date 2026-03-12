@@ -3,9 +3,32 @@ import { fetchBlocks } from '@/lib/notion/blocks'
 import { NotionBlocks } from '@/components/blocks/NotionBlock'
 import type { Post } from '@/types/post'
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 
 interface Props {
   params: Promise<{ slug: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  const cache = readCacheFile<Post>('posts.json')
+  const post = (cache?.items ?? []).find(
+    (p) => p.slug === slug && p.status === 'published'
+  )
+
+  if (!post) return {}
+
+  return {
+    title: post.title,
+    description: post.summary || undefined,
+    openGraph: {
+      title: post.title,
+      description: post.summary || undefined,
+      type: 'article',
+      publishedTime: post.publishedAt || undefined,
+      tags: post.tags,
+    },
+  }
 }
 
 export async function generateStaticParams() {

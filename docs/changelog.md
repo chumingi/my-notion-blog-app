@@ -4,6 +4,23 @@ Full development history. Newest entries at the top.
 
 ---
 
+## Feature — seo
+
+**Branch**: `feature/seo`
+
+**Commits**:
+- `feat(seo): add dynamic metadata and OG tags to post and note pages`
+
+**Summary**:
+
+Added SEO metadata (title template, Open Graph) to public pages.
+
+- `app/layout.tsx`: expanded root `metadata` — `title.template` (`%s | MinGi's Blog`), OG defaults (`type: website`, `locale: ko_KR`)
+- `app/posts/[slug]/page.tsx`: added `generateMetadata` — returns post `title`, `description` (from `summary`), OG `article` type with `publishedTime` and `tags`
+- `app/notes/[slug]/page.tsx`: added `generateMetadata` — returns note `title`, OG `article` type
+
+---
+
 ## Feature — tag-filter
 
 **Branch**: `feature/tag-filter`

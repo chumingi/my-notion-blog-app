@@ -3,9 +3,28 @@ import { fetchBlocks } from '@/lib/notion/blocks'
 import { NotionBlocks } from '@/components/blocks/NotionBlock'
 import type { Note } from '@/types/note'
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 
 interface Props {
   params: Promise<{ slug: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  const cache = readCacheFile<Note>('notes.json')
+  const note = (cache?.items ?? []).find(
+    (n) => n.slug === slug && n.status === 'published'
+  )
+
+  if (!note) return {}
+
+  return {
+    title: note.title,
+    openGraph: {
+      title: note.title,
+      type: 'article',
+    },
+  }
 }
 
 export async function generateStaticParams() {
