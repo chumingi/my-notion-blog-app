@@ -33,9 +33,9 @@ Every Claude session must follow this workflow:
 ## Current Status
 
 - **Phase**: Week 1 — Foundation + Notion integration
-- **Last completed feature**: `layout` (Header, Footer, root layout with dark mode)
-- **Current branch**: `feature/layout`
-- **Next branch**: `feature/tag-filter`
+- **Last completed feature**: `tag-filter` (tag filter UI on post/note list pages)
+- **Current branch**: `feature/tag-filter`
+- **Next branch**: `feature/seo`
 
 **What's implemented:**
 - Full project documentation (requirements, architecture, roadmap, decisions, git-workflow, screens, setup)
@@ -45,6 +45,7 @@ Every Claude session must follow this workflow:
 - Blog pages: /posts list+detail, /notes list+detail, lib/notion/blocks.ts (block fetch), generateStaticParams from cache
 - Block renderer: RichText.tsx (inline styles), NotionBlock.tsx (paragraph/heading/list/code/image/quote/callout/divider/toggle), shiki syntax highlighting (token-based)
 - Layout: Header (sticky, nav links), Footer, root layout wired (max-w-3xl, dark mode via prefers-color-scheme)
+- Tag filter: TagFilter.tsx (button group UI), PostsListClient.tsx, NotesListClient.tsx (client wrappers with useState)
 
 **Open decisions:**
 - `NOTION_ACCESS_TOKEN` is stored manually in `.env.local` after OAuth (by design — personal app, token doesn't expire)
@@ -64,7 +65,7 @@ Every Claude session must follow this workflow:
 | Note list + detail pages | `feature/blog-pages` | merged |
 | Notion block renderer | `feature/block-renderer` | merged |
 | Layout (Header, Footer, dark mode) | `feature/layout` | merged |
-| Tag filter UI | `feature/tag-filter` | planned |
+| Tag filter UI | `feature/tag-filter` | merged |
 | SEO (meta, OG image) | `feature/seo` | planned |
 | Vercel deploy | `feature/deploy` | planned |
 
@@ -74,20 +75,20 @@ Every Claude session must follow this workflow:
 
 ## Next Recommended Feature
 
-**Feature**: `tag-filter`
-**Goal**: Implement tag filter UI on post/note list pages
+**Feature**: `seo`
+**Goal**: Add SEO metadata (meta tags, Open Graph) to public pages
 
 **Scope:**
-- `components/ui/TagFilter.tsx` — tag filter button group (client component)
-- `app/posts/page.tsx`, `app/notes/page.tsx` — integrate TagFilter
+- `app/layout.tsx` — root metadata (title, description, OG defaults)
+- `app/posts/[slug]/page.tsx`, `app/notes/[slug]/page.tsx` — dynamic generateMetadata
 
 **Done criteria:**
-- Tags extracted from cached posts/notes
-- Clicking a tag filters the displayed list
+- Each post/note detail page has unique title + description in `<head>`
+- OG tags populated from post/note data
 - Build passes with no type errors
 
-**Recommended branch**: `feature/tag-filter`
-**Commit example**: `feat(tag-filter): add tag filter UI to post and note list pages`
+**Recommended branch**: `feature/seo`
+**Commit example**: `feat(seo): add dynamic metadata and OG tags to post and note pages`
 
 ---
 
@@ -110,4 +111,4 @@ See full development history: `docs/changelog.md`
 - `cache/` directory is in `.gitignore` — will not exist on fresh clone; run import first
 - `@notionhq/client` v5: `databases.query` 없음 → `dataSources.query(data_source_id)` 사용
 
-**Next target**: `feature/layout`
+**Next target**: `feature/seo`

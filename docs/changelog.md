@@ -4,6 +4,25 @@ Full development history. Newest entries at the top.
 
 ---
 
+## Feature — tag-filter
+
+**Branch**: `feature/tag-filter`
+
+**Commits**:
+- `feat(tag-filter): add tag filter UI to post and note list pages`
+
+**Summary**:
+
+Implemented client-side tag filter on post and note list pages.
+
+- `components/ui/TagFilter.tsx`: stateless button group — "All" button + one button per tag; active state highlighted; dark mode aware
+- `components/posts/PostsListClient.tsx`: `'use client'` wrapper for posts list — manages `selectedTag` state, deduplicates and sorts tags from all posts, filters displayed list
+- `components/notes/NotesListClient.tsx`: same pattern for notes list
+- `app/posts/page.tsx`: server component stays; delegates list rendering to `PostsListClient`
+- `app/notes/page.tsx`: same — delegates to `NotesListClient`
+
+---
+
 ## Feature — layout
 
 **Branch**: `feature/layout`
